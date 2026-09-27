@@ -157,3 +157,4 @@ like \\[yank-pop] does, but in the opposite direction."
  )
 
 (global-tab-line-mode +1)
+(keymap-global-set "C-x C-b" 'ibuffer)
