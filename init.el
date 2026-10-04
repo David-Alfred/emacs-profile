@@ -148,7 +148,7 @@ like \\[yank-pop] does, but in the opposite direction."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages '(marginalia markdown-mode vertico wgrep)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -158,3 +158,19 @@ like \\[yank-pop] does, but in the opposite direction."
 
 (global-tab-line-mode +1)
 (keymap-global-set "C-x C-b" 'ibuffer)
+
+;;markdown-mode
+(unless (package-installed-p 'marginalia)
+  (with-demoted-errors "%s"
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'markdown-mode)))
+
+(autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+
+(with-demoted-errors "%s" (add-hook 'markdown-mode-hook 'ruler-mode))
+
+(global-display-line-numbers-mode +1)
