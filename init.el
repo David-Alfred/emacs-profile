@@ -96,7 +96,19 @@ like \\[yank-pop] does, but in the opposite direction."
 
 (add-hook 'kill-emacs-query-functions
           'custom-prompt-customize-unsaved-options)
+;;markdown-mode
+(unless (package-installed-p 'markdown-mode)
+  (with-demoted-errors "%s"
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'markdown-mode)))
 
+(when (package-installed-p 'markdown-mode) (autoload 'markdown-mode "markdown-mode"
+   "Major mode for editing Markdown files" t)
+(add-to-list 'auto-mode-alist
+             '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+
+(with-demoted-errors "%s" (add-hook 'markdown-mode-hook 'ruler-mode)))
 (desktop-save-mode +1)   ; restore files from previous session
 
 (save-place-mode +1)   ; come back to where we were in that file
@@ -158,19 +170,5 @@ like \\[yank-pop] does, but in the opposite direction."
 
 (global-tab-line-mode +1)
 (keymap-global-set "C-x C-b" 'ibuffer)
-
-;;markdown-mode
-(unless (package-installed-p 'marginalia)
-  (with-demoted-errors "%s"
-    (unless package-archive-contents
-      (package-refresh-contents))
-    (package-install 'markdown-mode)))
-
-(autoload 'markdown-mode "markdown-mode"
-   "Major mode for editing Markdown files" t)
-(add-to-list 'auto-mode-alist
-             '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
-
-(with-demoted-errors "%s" (add-hook 'markdown-mode-hook 'ruler-mode))
 
 (global-display-line-numbers-mode +1)
