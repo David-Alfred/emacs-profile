@@ -103,12 +103,21 @@ like \\[yank-pop] does, but in the opposite direction."
       (package-refresh-contents))
     (package-install 'markdown-mode)))
 
+;;markdown-mode
+(unless (package-installed-p 'obsidian)
+  (with-demoted-errors "%s"
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'obsidian)))
+
 (when (package-installed-p 'markdown-mode) (autoload 'markdown-mode "markdown-mode"
    "Major mode for editing Markdown files" t)
 (add-to-list 'auto-mode-alist
-             '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode))
+             '("\\.\\(?:md\\|markdown\\|mkd\\|mdown\\|mkdn\\|mdwn\\)\\'" . markdown-mode) )
+ (add-hook 'markdown-mode-hook 'ruler-mode)
+ )
 
-(with-demoted-errors "%s" (add-hook 'markdown-mode-hook 'ruler-mode)))
+
 (desktop-save-mode +1)   ; restore files from previous session
 
 (save-place-mode +1)   ; come back to where we were in that file
@@ -160,7 +169,9 @@ like \\[yank-pop] does, but in the opposite direction."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(marginalia markdown-mode vertico wgrep)))
+ '(global-obsidian-mode t)
+ '(obsidian-directory "/home/alfred/Documents/japanese/")
+ '(package-selected-packages nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
