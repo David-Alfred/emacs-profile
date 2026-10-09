@@ -94,6 +94,12 @@ like \\[yank-pop] does, but in the opposite direction."
       (package-refresh-contents))
     (package-install 'wgrep)))
 
+(unless (package-installed-p 'consult)
+  (with-demoted-errors "%s"
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'consult)))
+
 (add-hook 'kill-emacs-query-functions
           'custom-prompt-customize-unsaved-options)
 ;;markdown-mode
@@ -103,7 +109,7 @@ like \\[yank-pop] does, but in the opposite direction."
       (package-refresh-contents))
     (package-install 'markdown-mode)))
 
-;;markdown-mode
+;;obsidan
 (unless (package-installed-p 'obsidian)
   (with-demoted-errors "%s"
     (unless package-archive-contents
@@ -117,6 +123,28 @@ like \\[yank-pop] does, but in the opposite direction."
  (add-hook 'markdown-mode-hook 'ruler-mode)
  )
 
+;;indent guideline
+(unless (package-installed-p 'highlight-indent-guides)
+  (with-demoted-errors "%s"
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'highlight-indent-guides)))
+
+(when (package-installed-p 'highlight-indent-guides)
+  (add-hook 'prog-mode-hook 'highlight-indent-guides-mode)
+  (setq highlight-indent-guides-method 'bitmap)
+  
+   )
+;;solarized-dark theme
+(unless (package-installed-p 'solarized-theme)
+  (with-demoted-errors "%s"
+    (unless package-archive-contents
+      (package-refresh-contents))
+    (package-install 'solarized-theme)))
+
+(when (package-installed-p 'solarized-theme)
+  (load-theme 'solarized-dark t)
+   )
 
 (desktop-save-mode +1)   ; restore files from previous session
 
@@ -170,8 +198,12 @@ like \\[yank-pop] does, but in the opposite direction."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(global-obsidian-mode t)
+ '(highlight-indent-guides-method 'character)
  '(obsidian-directory "/home/alfred/Documents/japanese/")
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(company consult highlight-indent-guides marginalia obsidian
+             solarized-theme tide tree-sitter tree-sitter-langs
+             treesit-auto vertico wgrep)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -183,3 +215,39 @@ like \\[yank-pop] does, but in the opposite direction."
 (keymap-global-set "C-x C-b" 'ibuffer)
 
 (global-display-line-numbers-mode +1)
+
+(use-package typescript-ts-mode
+  :ensure nil
+  :mode (("\\.tsx\\'" . tsx-ts-mode)
+         ("\\.ts\\'" . typescript-ts-mode))
+  :custom
+  (typescript-ts-mode-indent-offset 2))
+
+(use-package treesit
+  :ensure nil
+  :custom
+  (treesit-font-lock-level 4))
+
+(use-package treesit-auto
+  :ensure t
+  :config
+  (global-treesit-auto-mode 1))
+
+(use-package company
+  :ensure t
+  :hook (after-init . global-company-mode))
+
+(use-package tide
+  :ensure t
+  :hook ((typescript-ts-mode . setup-tide-mode)
+         (tsx-ts-mode . setup-tide-mode))
+  :init
+  (defun setup-tide-mode ()
+    (interactive)
+    (tide-setup)
+    (flycheck-mode 1)
+    (setq-local flycheck-check-syntax-automatically
+                '(save mode-enabled))
+    (eldoc-mode 1)
+    (tide-hl-identifier-mode 1)
+    (company-mode 1)))
