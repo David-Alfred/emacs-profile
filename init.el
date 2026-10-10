@@ -197,9 +197,7 @@ like \\[yank-pop] does, but in the opposite direction."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(global-obsidian-mode t)
  '(highlight-indent-guides-method 'character)
- '(obsidian-directory "/home/alfred/Documents/japanese/")
  '(package-selected-packages
    '(company consult highlight-indent-guides marginalia obsidian
              solarized-theme tide tree-sitter tree-sitter-langs
