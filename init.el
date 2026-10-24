@@ -201,8 +201,8 @@ like \\[yank-pop] does, but in the opposite direction."
  '(highlight-indent-guides-method 'character)
  '(package-selected-packages
    '(company consult highlight-indent-guides marginalia obsidian
-             pdf-tools solarized-theme tide tree-sitter
-             tree-sitter-langs treesit-auto vertico wgrep))
+             pdf-tools saveplace-pdf-view solarized-theme tide
+             tree-sitter tree-sitter-langs treesit-auto vertico wgrep))
  '(tool-bar-mode nil)
  '(tool-bar-position 'left))
 (custom-set-faces
@@ -217,6 +217,9 @@ like \\[yank-pop] does, but in the opposite direction."
 
 (global-display-line-numbers-mode +1)
 
+(add-hook 'pdf-view-mode-hook
+          (lambda ()
+            (display-line-numbers-mode -1)))
 ;;indentation configuration start
 (global-set-key (kbd "C->") 'indent-rigidly-right-to-tab-stop)
 (global-set-key (kbd "C-<") 'indent-rigidly-left-to-tab-stop)
@@ -283,3 +286,10 @@ like \\[yank-pop] does, but in the opposite direction."
     (eldoc-mode 1)
     (tide-hl-identifier-mode 1)
     (company-mode 1)))
+
+
+(use-package saveplace-pdf-view
+  :after (:any doc-view pdf-tools)
+  :demand t
+  :config
+  (save-place-mode 1))
